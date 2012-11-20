@@ -1714,7 +1714,7 @@ namespace MultiWiiWinGUI
                 zgMonitor.AxisChange();
                 zgMonitor.Invalidate();
 
-                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAux1, mw_gui.rcAux2, mw_gui.rcAux3, mw_gui.rcAux8, mw_gui.rcAux5, mw_gui.rcAux6, mw_gui.rcAux7, mw_gui.rcAux8);
+                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAux1, mw_gui.rcAux2, mw_gui.rcAux3, mw_gui.rcAux4, mw_gui.rcAux5, mw_gui.rcAux6, mw_gui.rcAux7, mw_gui.rcAux8);
 
                 curve_acc_roll.IsVisible = cb_acc_roll.Checked;
                 curve_acc_pitch.IsVisible = cb_acc_pitch.Checked;
