@@ -603,7 +603,8 @@ namespace MultiWiiWinGUI
         public int[] servos;
         public int[] motors;
         public int rcRoll, rcPitch, rcYaw, rcThrottle;
-        public int rcAux1, rcAux2, rcAux3, rcAux4, rcAux5, rcAux6, rcAux7, rcAux8;
+        public int[] rcAUX;
+        //public int rcAux1, rcAux2, rcAux3, rcAux4, rcAux5, rcAux6, rcAux7, rcAux8;
         public int present;            //What sensors are present?
         public UInt32 mode;               //What mode are we in ?
         public int i2cErrors;
@@ -654,6 +655,8 @@ namespace MultiWiiWinGUI
         {
             motors = new int[8];
             servos = new int[8];
+            rcAUX = new int[8];
+
             pidP = new byte[pidItems];
             pidI = new byte[pidItems];
             pidD = new byte[pidItems];

@@ -108,7 +108,7 @@ namespace MultiWiiWinGUI
         System.Windows.Forms.Label[] cb_labels;
         System.Windows.Forms.Label[] aux_labels;
         System.Windows.Forms.Label[,] lmh_labels;
-        
+
         CultureInfo culture = new CultureInfo("en-US");
 
 
@@ -146,8 +146,8 @@ namespace MultiWiiWinGUI
         GMapOverlay markers;
         GMapOverlay polygons;
         GMapOverlay positions;
-        
-        
+
+
         static GMapProvider[] mapProviders;
         static PointLatLng copterPos = new PointLatLng(47.402489, 19.071558);       //Just the corrds of my flying place
         static bool isMouseDown = false;
@@ -176,63 +176,64 @@ namespace MultiWiiWinGUI
 
 
         //Commands
-         const int MSP_IDENT                =100;
+        const int MSP_IDENT = 100;
 
-         const int MSP_STATUS               =101;
-         const int MSP_RAW_IMU              =102;
-         const int MSP_SERVO                =103;
-         const int MSP_MOTOR                =104;
-         const int MSP_RC                   =105;
-         const int MSP_RAW_GPS              =106;
-         const int MSP_COMP_GPS             =107;
-         const int MSP_ATTITUDE             =108;
-         const int MSP_ALTITUDE             =109;
-         const int MSP_BAT                  =110;
-         const int MSP_RC_TUNING            =111;
-         const int MSP_PID                  =112;
-         const int MSP_BOX                  =113;
-         const int MSP_MISC                 =114;
-         const int MSP_MOTOR_PINS = 115;
-         const int MSP_BOXNAMES = 116;
-         const int MSP_PIDNAMES = 117;
-         const int MSP_WP = 118;
-
-
-         const int MSP_SET_RAW_RC           =200;
-         const int MSP_SET_RAW_GPS          =201;
-         const int MSP_SET_PID              =202;
-         const int MSP_SET_BOX              =203;
-         const int MSP_SET_RC_TUNING        =204;
-         const int MSP_ACC_CALIBRATION      =205;
-         const int MSP_MAG_CALIBRATION      =206;
-         const int MSP_SET_MISC             =207;
-         const int MSP_RESET_CONF           =208;
-         const int MSP_SET_WP = 209;
-
-         const int MSP_EEPROM_WRITE         =250;
-         const int MSP_DEBUG                =254;
+        const int MSP_STATUS = 101;
+        const int MSP_RAW_IMU = 102;
+        const int MSP_SERVO = 103;
+        const int MSP_MOTOR = 104;
+        const int MSP_RC = 105;
+        const int MSP_RAW_GPS = 106;
+        const int MSP_COMP_GPS = 107;
+        const int MSP_ATTITUDE = 108;
+        const int MSP_ALTITUDE = 109;
+        const int MSP_BAT = 110;
+        const int MSP_RC_TUNING = 111;
+        const int MSP_PID = 112;
+        const int MSP_BOX = 113;
+        const int MSP_MISC = 114;
+        const int MSP_MOTOR_PINS = 115;
+        const int MSP_BOXNAMES = 116;
+        const int MSP_PIDNAMES = 117;
+        const int MSP_WP = 118;
 
 
+        const int MSP_SET_RAW_RC = 200;
+        const int MSP_SET_RAW_GPS = 201;
+        const int MSP_SET_PID = 202;
+        const int MSP_SET_BOX = 203;
+        const int MSP_SET_RC_TUNING = 204;
+        const int MSP_ACC_CALIBRATION = 205;
+        const int MSP_MAG_CALIBRATION = 206;
+        const int MSP_SET_MISC = 207;
+        const int MSP_RESET_CONF = 208;
+        const int MSP_SET_WP = 209;
 
-          const byte IDLE = 0;
-          const byte HEADER_START = 1;
-          const byte HEADER_M = 2;
-          const byte HEADER_ARROW = 3;
-          const byte HEADER_SIZE = 4;
-          const byte HEADER_CMD = 5;
-          const byte HEADER_ERR = 6;
-
-         static byte[] inBuf;
+        const int MSP_EEPROM_WRITE = 250;
+        const int MSP_DEBUG = 254;
 
 
-         static byte c_state = IDLE;
-         static Boolean err_rcvd = false;
-         static byte offset = 0;
-         static byte dataSize = 0;
-         static byte checksum = 0;
-         static byte cmd;
-         static int serial_error_count = 0;
-         static int serial_packet_count = 0;
+
+        const byte IDLE = 0;
+        const byte HEADER_START = 1;
+        const byte HEADER_M = 2;
+        const byte HEADER_ARROW = 3;
+        const byte HEADER_SIZE = 4;
+        const byte HEADER_CMD = 5;
+        const byte HEADER_ERR = 6;
+
+        static byte[] inBuf;
+
+        static int AUX_CHANNELS = 4;
+
+        static byte c_state = IDLE;
+        static Boolean err_rcvd = false;
+        static byte offset = 0;
+        static byte dataSize = 0;
+        static byte checksum = 0;
+        static byte cmd;
+        static int serial_error_count = 0;
+        static int serial_packet_count = 0;
 
 
         #endregion
@@ -400,9 +401,9 @@ namespace MultiWiiWinGUI
 
             //Build indicator lamps array
             indicators = new indicator_lamp[iCheckBoxItems];
-            int row=0; int col=0;
-            int startx =800; int starty = 3;
-            for (int i=0;i<iCheckBoxItems;i++)
+            int row = 0; int col = 0;
+            int startx = 800; int starty = 3;
+            for (int i = 0; i < iCheckBoxItems; i++)
             {
                 indicators[i] = new indicator_lamp();
                 indicators[i].Location = new Point(startx + col * 52, starty + row * 19);
@@ -520,7 +521,7 @@ namespace MultiWiiWinGUI
                     Pid[i].Pfield.Maximum = Pid[i].Pmax;
                     Pid[i].Pfield.Minimum = Pid[i].Pmin;
                     Pid[i].Pfield.DecimalPlaces = decimals(Pid[i].Pprec);
-                    Pid[i].Pfield.Increment = 1/(decimal)Pid[i].Pprec;
+                    Pid[i].Pfield.Increment = 1 / (decimal)Pid[i].Pprec;
                     this.tabPagePID.Controls.Add(Pid[i].Pfield);
 
                     Pid[i].Plabel = new System.Windows.Forms.Label();
@@ -575,7 +576,7 @@ namespace MultiWiiWinGUI
                     Pid[i].Dlabel.Text = "D";
                     Pid[i].Dlabel.Font = fontField;
                     Pid[i].Dlabel.ForeColor = Color.White;
-                    Pid[i].Dlabel.Location = new Point(iRow3-20, iTopY + i * iLineSpace);
+                    Pid[i].Dlabel.Location = new Point(iRow3 - 20, iTopY + i * iLineSpace);
                     this.tabPagePID.Controls.Add(Pid[i].Dlabel);
 
                 }
@@ -732,9 +733,9 @@ namespace MultiWiiWinGUI
             myPane.XAxis.Scale.Min = 0;
             myPane.XAxis.Scale.Max = 300;
             myPane.XAxis.Type = AxisType.Linear;
-            
-            
-            
+
+
+
             zgMonitor.ScrollGrace = 0;
             xScale = zgMonitor.GraphPane.XAxis.Scale;
             zgMonitor.AxisChange();
@@ -789,7 +790,7 @@ namespace MultiWiiWinGUI
         private void timer_realtime_Tick(object sender, EventArgs e)
         {
 
-            
+
             if (serialPort.BytesToRead == 0)
             {
 
@@ -811,7 +812,7 @@ namespace MultiWiiWinGUI
                     if ((iRefreshDivider % 20) == 0) MSPqueryWP(0);         //get home position
                 }
                 else { mw_gui.GPS_home_lon = 0; mw_gui.GPS_home_lat = 0; bHomeRecorded = false; }
-                
+
                 if ((mw_gui.mode & (1 << 7)) > 0)
                 {                         //poshold
                     if ((iRefreshDivider % 20) == 0) MSPqueryWP(16);         //get hold position
@@ -900,17 +901,18 @@ namespace MultiWiiWinGUI
 
 
                 //We have to do it for a couple of times to ensure that we will have parameters loaded 
-                for (int i=0;i<10;i++) {
+                for (int i = 0; i < 10; i++)
+                {
 
-                MSPquery(MSP_PID);
-                MSPquery(MSP_RC_TUNING);
-                MSPquery(MSP_IDENT);
-                MSPquery(MSP_BOX);
-                MSPquery(MSP_MISC);
+                    MSPquery(MSP_PID);
+                    MSPquery(MSP_RC_TUNING);
+                    MSPquery(MSP_IDENT);
+                    MSPquery(MSP_BOX);
+                    MSPquery(MSP_MISC);
                 }
 
-                
-                
+
+
                 //Run BackgroundWorker
                 if (!bkgWorker.IsBusy) { bkgWorker.RunWorkerAsync(); }
 
@@ -924,7 +926,7 @@ namespace MultiWiiWinGUI
                 bOptions_needs_refresh = true;
                 update_gui();
 
-             
+
 
 
             }
@@ -1081,9 +1083,9 @@ namespace MultiWiiWinGUI
                                 reader.MoveToAttribute("shown");
                                 Pid[iPidID].Pshown = Convert.ToBoolean(reader.GetAttribute("shown"));
                                 reader.MoveToAttribute("min");
-                                Pid[iPidID].Pmin = Convert.ToDecimal(reader.GetAttribute("min"),culture);
+                                Pid[iPidID].Pmin = Convert.ToDecimal(reader.GetAttribute("min"), culture);
                                 reader.MoveToAttribute("max");
-                                Pid[iPidID].Pmax = Convert.ToDecimal(reader.GetAttribute("max"),culture);
+                                Pid[iPidID].Pmax = Convert.ToDecimal(reader.GetAttribute("max"), culture);
                                 reader.MoveToAttribute("prec");
                                 Pid[iPidID].Pprec = Convert.ToInt16(reader.GetAttribute("prec"));
                             }
@@ -1094,9 +1096,9 @@ namespace MultiWiiWinGUI
                                 reader.MoveToAttribute("shown");
                                 Pid[iPidID].Ishown = Convert.ToBoolean(reader.GetAttribute("shown"));
                                 reader.MoveToAttribute("min");
-                                Pid[iPidID].Imin = Convert.ToDecimal(reader.GetAttribute("min"),culture);
+                                Pid[iPidID].Imin = Convert.ToDecimal(reader.GetAttribute("min"), culture);
                                 reader.MoveToAttribute("max");
-                                Pid[iPidID].Imax = Convert.ToDecimal(reader.GetAttribute("max"),culture);
+                                Pid[iPidID].Imax = Convert.ToDecimal(reader.GetAttribute("max"), culture);
                                 reader.MoveToAttribute("prec");
                                 Pid[iPidID].Iprec = Convert.ToInt16(reader.GetAttribute("prec"));
                             }
@@ -1107,16 +1109,16 @@ namespace MultiWiiWinGUI
                                 reader.MoveToAttribute("shown");
                                 Pid[iPidID].Dshown = Convert.ToBoolean(reader.GetAttribute("shown"));
                                 reader.MoveToAttribute("min");
-                                Pid[iPidID].Dmin = Convert.ToDecimal(reader.GetAttribute("min"),culture);
+                                Pid[iPidID].Dmin = Convert.ToDecimal(reader.GetAttribute("min"), culture);
                                 reader.MoveToAttribute("max");
-                                Pid[iPidID].Dmax = Convert.ToDecimal(reader.GetAttribute("max"),culture);
+                                Pid[iPidID].Dmax = Convert.ToDecimal(reader.GetAttribute("max"), culture);
                                 reader.MoveToAttribute("prec");
                                 Pid[iPidID].Dprec = Convert.ToInt16(reader.GetAttribute("prec"));
                             }
 
 
-                            
-                            
+
+
                             break;
 
                     }
@@ -1163,13 +1165,13 @@ namespace MultiWiiWinGUI
 
         private int read16(SerialPort s)
         {
-            byte[] buffer = {0,0};
+            byte[] buffer = { 0, 0 };
             int retval;
 
             buffer[0] = (byte)s.ReadByte();
             buffer[1] = (byte)s.ReadByte();
 
-            retval = BitConverter.ToInt16(buffer,0);
+            retval = BitConverter.ToInt16(buffer, 0);
 
             return (retval);
         }
@@ -1178,7 +1180,7 @@ namespace MultiWiiWinGUI
         private void evaluate_command(byte cmd)
         {
 
-            byte ptr; 
+            byte ptr;
 
             switch (cmd)
             {
@@ -1230,14 +1232,22 @@ namespace MultiWiiWinGUI
                     mw_gui.rcPitch = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
                     mw_gui.rcYaw = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
                     mw_gui.rcThrottle = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux1 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux2 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux3 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux4 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux5 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux6 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux7 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
-                    mw_gui.rcAux8 = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    if (AUX_CHANNELS != ((dataSize / 2) - 4))
+                    {
+                        AUX_CHANNELS = (dataSize / 2) - 4;
+                    };
+                    for (int i = 0; i < AUX_CHANNELS; i++)
+                    {
+                        mw_gui.rcAUX[i] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    }
+                    //mw_gui.rcAUX[0] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    //mw_gui.rcAUX[1] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    //mw_gui.rcAUX[2] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    //mw_gui.rcAUX[3] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    //mw_gui.rcAUX[4] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    //mw_gui.rcAUX[5] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    //mw_gui.rcAUX[6] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
+                    //mw_gui.rcAUX[7] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
                     break;
                 case MSP_RAW_GPS:
                     ptr = 0;
@@ -1332,7 +1342,7 @@ namespace MultiWiiWinGUI
 
 
 
-        
+
 
 
 
@@ -1344,7 +1354,7 @@ namespace MultiWiiWinGUI
             // Do not access the form's BackgroundWorker reference directly.
             // Instead, use the reference provided by the sender parameter.
             BackgroundWorker bw = sender as BackgroundWorker;
-            
+
             try
             {
                 bool bIsPortOpen = serialPort.IsOpen;
@@ -1455,7 +1465,7 @@ namespace MultiWiiWinGUI
                                 break;
                         }
                     }
-                    
+
                 }
                 else   //port not opened, (it could happen when U disconnect the usb cable while connected
                 {
@@ -1496,26 +1506,26 @@ namespace MultiWiiWinGUI
                 return;
             }
 
-            if (bLogRunning && wLogStream.BaseStream!=null)
+            if (bLogRunning && wLogStream.BaseStream != null)
             {
                 //RAW Sensor (acc, gyro)
                 if (gui_settings.logGraw) { wLogStream.WriteLine("GRAW,{0},{1},{2},{3},{4},{5}", mw_gui.ax, mw_gui.ay, mw_gui.az, mw_gui.gx, mw_gui.gy, mw_gui.gz); }
                 //Attitude
-                if (gui_settings.logGatt) { wLogStream.WriteLine("GATT,{0},{1}",mw_gui.angx,mw_gui.angy);}
+                if (gui_settings.logGatt) { wLogStream.WriteLine("GATT,{0},{1}", mw_gui.angx, mw_gui.angy); }
                 //Mag, head, baro
-                if (gui_settings.logGmag) { wLogStream.WriteLine("GMAG,{0},{1},{2},{3},{4}", mw_gui.magx, mw_gui.magy, mw_gui.magz, mw_gui.heading, mw_gui.baro);}
+                if (gui_settings.logGmag) { wLogStream.WriteLine("GMAG,{0},{1},{2},{3},{4}", mw_gui.magx, mw_gui.magy, mw_gui.magz, mw_gui.heading, mw_gui.baro); }
                 //RC controls 
-                if (gui_settings.logGrcc) { wLogStream.WriteLine("GRCC,{0},{1},{2},{3}",mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw);}
+                if (gui_settings.logGrcc) { wLogStream.WriteLine("GRCC,{0},{1},{2},{3}", mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw); }
                 //RC Aux controls
-                if (gui_settings.logGrcx) { wLogStream.WriteLine("GRCX,{0},{1},{2},{3}", mw_gui.rcAux1, mw_gui.rcAux2, mw_gui.rcAux3, mw_gui.rcAux3, mw_gui.rcAux5, mw_gui.rcAux6, mw_gui.rcAux7, mw_gui.rcAux8); }
+                if (gui_settings.logGrcx) { wLogStream.WriteLine("GRCX,{0},{1},{2},{3}", mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7]); }
                 //Motors
-                if (gui_settings.logGmot) { wLogStream.WriteLine("GMOT,{0},{1},{2},{3},{4},{5},{6},{7}", mw_gui.motors[0], mw_gui.motors[1], mw_gui.motors[2], mw_gui.motors[3], mw_gui.motors[4], mw_gui.motors[5], mw_gui.motors[6], mw_gui.motors[7]);}
+                if (gui_settings.logGmot) { wLogStream.WriteLine("GMOT,{0},{1},{2},{3},{4},{5},{6},{7}", mw_gui.motors[0], mw_gui.motors[1], mw_gui.motors[2], mw_gui.motors[3], mw_gui.motors[4], mw_gui.motors[5], mw_gui.motors[6], mw_gui.motors[7]); }
                 //Servos
-                if (gui_settings.logGsrv) { wLogStream.WriteLine("GSRV,{0},{1},{2},{3},{4},{5},{6},{7}", mw_gui.servos[0], mw_gui.servos[1], mw_gui.servos[2], mw_gui.servos[3], mw_gui.servos[4], mw_gui.servos[5], mw_gui.servos[6], mw_gui.servos[7]);}
+                if (gui_settings.logGsrv) { wLogStream.WriteLine("GSRV,{0},{1},{2},{3},{4},{5},{6},{7}", mw_gui.servos[0], mw_gui.servos[1], mw_gui.servos[2], mw_gui.servos[3], mw_gui.servos[4], mw_gui.servos[5], mw_gui.servos[6], mw_gui.servos[7]); }
                 // Nav-GPS
-                if (gui_settings.logGnav) { wLogStream.WriteLine("GNAV,{0},{1},{2},{3}", mw_gui.GPS_fix, mw_gui.GPS_numSat, mw_gui.GPS_directionToHome, mw_gui.GPS_distanceToHome);}
+                if (gui_settings.logGnav) { wLogStream.WriteLine("GNAV,{0},{1},{2},{3}", mw_gui.GPS_fix, mw_gui.GPS_numSat, mw_gui.GPS_directionToHome, mw_gui.GPS_distanceToHome); }
                 // Housekeeping
-                if (gui_settings.logGpar) { wLogStream.WriteLine("GPAR,{0},{1},{2},{3}", mw_gui.cycleTime,mw_gui.i2cErrors, mw_gui.vBat, mw_gui.pMeterSum);}
+                if (gui_settings.logGpar) { wLogStream.WriteLine("GPAR,{0},{1},{2},{3}", mw_gui.cycleTime, mw_gui.i2cErrors, mw_gui.vBat, mw_gui.pMeterSum); }
                 //Debug
                 if (gui_settings.logGdbg) { wLogStream.WriteLine("GDBG,{0},{1},{2},{3}", mw_gui.debug1, mw_gui.debug2, mw_gui.debug3, mw_gui.debug4); }
             }
@@ -1525,7 +1535,7 @@ namespace MultiWiiWinGUI
 
                 if (GPS_lat_old != mw_gui.GPS_latitude || GPS_lon_old != mw_gui.GPS_longitude)
                 {
-                    wKMLLogStream.WriteLine("{0},{1},{2}", (decimal)mw_gui.GPS_longitude / 10000000, (decimal)mw_gui.GPS_latitude / 10000000,mw_gui.GPS_altitude);
+                    wKMLLogStream.WriteLine("{0},{1},{2}", (decimal)mw_gui.GPS_longitude / 10000000, (decimal)mw_gui.GPS_latitude / 10000000, mw_gui.GPS_altitude);
                     GPS_lat_old = mw_gui.GPS_latitude;
                     GPS_lon_old = mw_gui.GPS_longitude;
                 }
@@ -1541,7 +1551,7 @@ namespace MultiWiiWinGUI
                 {
                     addKMLMarker("PosHold", mw_gui.GPS_poshold_lon, mw_gui.GPS_poshold_lat, mw_gui.GPS_altitude);
                     bPosholdRecorded = true;
-                }  
+                }
 
 
             }
@@ -1556,7 +1566,7 @@ namespace MultiWiiWinGUI
                     update_pid_panel();
                     update_aux_panel();
                     bOptions_needs_refresh = false;
-                    
+
                 }
             }
 
@@ -1576,22 +1586,22 @@ namespace MultiWiiWinGUI
                     positions.Markers.Clear();
 
 
-                    if (((mw_gui.mode & (1 << 5)) > 0) && (mw_gui.GPS_home_lon!=0))       //ARMED
+                    if (((mw_gui.mode & (1 << 5)) > 0) && (mw_gui.GPS_home_lon != 0))       //ARMED
                     {
                         PointLatLng GPS_home = new PointLatLng((double)mw_gui.GPS_home_lat / 10000000, (double)mw_gui.GPS_home_lon / 10000000);
                         positions.Markers.Add(new GMapMarkerHome(GPS_home));
-                    } 
-                        
+                    }
 
-                    if (((mw_gui.mode & (1 << 7)) > 0) && (mw_gui.GPS_poshold_lon!=0))       //poshold
+
+                    if (((mw_gui.mode & (1 << 7)) > 0) && (mw_gui.GPS_poshold_lon != 0))       //poshold
                     {
                         PointLatLng GPS_poshold = new PointLatLng((double)mw_gui.GPS_poshold_lat / 10000000, (double)mw_gui.GPS_poshold_lon / 10000000);
-                        positions.Markers.Add(new  GMapMarkerGoogleRed(GPS_poshold));
-                    }                        
+                        positions.Markers.Add(new GMapMarkerGoogleRed(GPS_poshold));
+                    }
 
 
                     positions.Markers.Add(new GMapMarkerQuad(GPS_pos, mw_gui.heading, 0, 0));
-                    
+
                     Grout.Points.Add(GPS_pos);
                     MainMap.Position = GPS_pos;
                     MainMap.Invalidate();
@@ -1612,30 +1622,30 @@ namespace MultiWiiWinGUI
             if (tabMain.SelectedIndex == 1)
             {
                 //update RC control values
-                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAux1, mw_gui.rcAux2, mw_gui.rcAux3, mw_gui.rcAux8, mw_gui.rcAux5, mw_gui.rcAux6, mw_gui.rcAux7, mw_gui.rcAux8);
+                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[7], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7]);
                 //Show LMH postions above switches
-                lmh_labels[0, 0].BackColor = (mw_gui.rcAux1 < rcLow) ? Color.Green : Color.Transparent;
-                lmh_labels[0, 1].BackColor = (mw_gui.rcAux1 > rcLow && mw_gui.rcAux1 < rcMid) ? Color.Green : Color.Transparent;
-                lmh_labels[0, 2].BackColor = (mw_gui.rcAux1 > rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[0, 0].BackColor = (mw_gui.rcAUX[0] < rcLow) ? Color.Green : Color.Transparent;
+                lmh_labels[0, 1].BackColor = (mw_gui.rcAUX[0] > rcLow && mw_gui.rcAUX[0] < rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[0, 2].BackColor = (mw_gui.rcAUX[0] > rcMid) ? Color.Green : Color.Transparent;
 
-                lmh_labels[1, 0].BackColor = (mw_gui.rcAux2 < rcLow) ? Color.Green : Color.Transparent;
-                lmh_labels[1, 1].BackColor = (mw_gui.rcAux2 > rcLow && mw_gui.rcAux2 < rcMid) ? Color.Green : Color.Transparent;
-                lmh_labels[1, 2].BackColor = (mw_gui.rcAux2 > rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[1, 0].BackColor = (mw_gui.rcAUX[1] < rcLow) ? Color.Green : Color.Transparent;
+                lmh_labels[1, 1].BackColor = (mw_gui.rcAUX[1] > rcLow && mw_gui.rcAUX[1] < rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[1, 2].BackColor = (mw_gui.rcAUX[1] > rcMid) ? Color.Green : Color.Transparent;
 
-                lmh_labels[2, 0].BackColor = (mw_gui.rcAux3 < rcLow) ? Color.Green : Color.Transparent;
-                lmh_labels[2, 1].BackColor = (mw_gui.rcAux3 > rcLow && mw_gui.rcAux3 < rcMid) ? Color.Green : Color.Transparent;
-                lmh_labels[2, 2].BackColor = (mw_gui.rcAux3 > rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[2, 0].BackColor = (mw_gui.rcAUX[2] < rcLow) ? Color.Green : Color.Transparent;
+                lmh_labels[2, 1].BackColor = (mw_gui.rcAUX[2] > rcLow && mw_gui.rcAUX[2] < rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[2, 2].BackColor = (mw_gui.rcAUX[2] > rcMid) ? Color.Green : Color.Transparent;
 
-                lmh_labels[3, 0].BackColor = (mw_gui.rcAux8 < rcLow) ? Color.Green : Color.Transparent;
-                lmh_labels[3, 1].BackColor = (mw_gui.rcAux8 > rcLow && mw_gui.rcAux8 < rcMid) ? Color.Green : Color.Transparent;
-                lmh_labels[3, 2].BackColor = (mw_gui.rcAux8 > rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[3, 0].BackColor = (mw_gui.rcAUX[3] < rcLow) ? Color.Green : Color.Transparent;
+                lmh_labels[3, 1].BackColor = (mw_gui.rcAUX[3] > rcLow && mw_gui.rcAUX[7] < rcMid) ? Color.Green : Color.Transparent;
+                lmh_labels[3, 2].BackColor = (mw_gui.rcAUX[3] > rcMid) ? Color.Green : Color.Transparent;
 
                 //evaluate rc_options and recolor mode which supposed to be ON at the current rc values
                 byte act1, act2, opt1, opt2;
 
                 //Construct options switch mask based on rcAux input
-                opt1 = (byte)(Convert.ToByte(mw_gui.rcAux1 < 1300) + Convert.ToByte(1300 < mw_gui.rcAux1 && mw_gui.rcAux1 < 1700) * 2 + Convert.ToByte(mw_gui.rcAux1 > 1700) * 4 + Convert.ToByte(mw_gui.rcAux2 < 1300) * 8 + Convert.ToByte(1300 < mw_gui.rcAux2 && mw_gui.rcAux2 < 1700) * 16 + Convert.ToByte(mw_gui.rcAux2 > 1700) * 32);
-                opt2 = (byte)(Convert.ToByte(mw_gui.rcAux3 < 1300) + Convert.ToByte(1300 < mw_gui.rcAux3 && mw_gui.rcAux3 < 1700) * 2 + Convert.ToByte(mw_gui.rcAux3 > 1700) * 4 + Convert.ToByte(mw_gui.rcAux8 < 1300) * 8 + Convert.ToByte(1300 < mw_gui.rcAux8 && mw_gui.rcAux8 < 1700) * 16 + Convert.ToByte(mw_gui.rcAux8 > 1700) * 32);
+                opt1 = (byte)(Convert.ToByte(mw_gui.rcAUX[0] < 1300) + Convert.ToByte(1300 < mw_gui.rcAUX[0] && mw_gui.rcAUX[0] < 1700) * 2 + Convert.ToByte(mw_gui.rcAUX[0] > 1700) * 4 + Convert.ToByte(mw_gui.rcAUX[1] < 1300) * 8 + Convert.ToByte(1300 < mw_gui.rcAUX[1] && mw_gui.rcAUX[1] < 1700) * 16 + Convert.ToByte(mw_gui.rcAUX[1] > 1700) * 32);
+                opt2 = (byte)(Convert.ToByte(mw_gui.rcAUX[2] < 1300) + Convert.ToByte(1300 < mw_gui.rcAUX[2] && mw_gui.rcAUX[2] < 1700) * 2 + Convert.ToByte(mw_gui.rcAUX[2] > 1700) * 4 + Convert.ToByte(mw_gui.rcAUX[3] < 1300) * 8 + Convert.ToByte(1300 < mw_gui.rcAUX[3] && mw_gui.rcAUX[3] < 1700) * 16 + Convert.ToByte(mw_gui.rcAUX[3] > 1700) * 32);
 
                 //Compare with switchbox settings
                 for (int b = 0; b < iCheckBoxItems; b++)
@@ -1684,8 +1694,8 @@ namespace MultiWiiWinGUI
                 if (cb_mag_yaw.Checked) { list_mag_yaw.Add((double)xTimeStamp, mw_gui.magz); }
                 l_mag_yaw.Text = "" + mw_gui.magz;
 
-                if (cb_alt.Checked) { list_alt.Add((double)xTimeStamp, mw_gui.baro/100); }
-                l_alt.Text = "" + (double)mw_gui.baro/100;
+                if (cb_alt.Checked) { list_alt.Add((double)xTimeStamp, mw_gui.baro / 100); }
+                l_alt.Text = "" + (double)mw_gui.baro / 100;
 
                 if (cb_head.Checked) { list_head.Add((double)xTimeStamp, mw_gui.heading); }
                 l_head.Text = "" + mw_gui.heading;
@@ -1714,7 +1724,7 @@ namespace MultiWiiWinGUI
                 zgMonitor.AxisChange();
                 zgMonitor.Invalidate();
 
-                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAux1, mw_gui.rcAux2, mw_gui.rcAux3, mw_gui.rcAux4, mw_gui.rcAux5, mw_gui.rcAux6, mw_gui.rcAux7, mw_gui.rcAux8);
+                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7]);
 
                 curve_acc_roll.IsVisible = cb_acc_roll.Checked;
                 curve_acc_pitch.IsVisible = cb_acc_pitch.Checked;
@@ -1757,7 +1767,7 @@ namespace MultiWiiWinGUI
                 l_cycletime.Text = String.Format("{0:0000} µs", mw_gui.cycleTime);
                 l_vbatt.Text = String.Format("{0:0.0} volts", (double)mw_gui.vBat / 10);
                 l_powersum.Text = String.Format("{0:0}", mw_gui.pMeterSum);
-                l_i2cerrors.Text = String.Format("{0:0}",mw_gui.i2cErrors);
+                l_i2cerrors.Text = String.Format("{0:0}", mw_gui.i2cErrors);
 
             } //end if tab=realtime;
         }
@@ -1772,7 +1782,7 @@ namespace MultiWiiWinGUI
         {
             CheckBoxEx cb = ((CheckBoxEx)(sender));
 
-            cb.IsHighlighted = cb.Checked == ((byte)(mw_gui.activation[cb.item] & (1 << cb.aux * 3 + cb.rclevel)) == 0) ? true : false; 
+            cb.IsHighlighted = cb.Checked == ((byte)(mw_gui.activation[cb.item] & (1 << cb.aux * 3 + cb.rclevel)) == 0) ? true : false;
 
         }
 
@@ -1818,7 +1828,7 @@ namespace MultiWiiWinGUI
                 MSPquery(MSP_IDENT);
                 MSPquery(MSP_BOX);
                 MSPquery(MSP_MISC);
-                System.Threading.Thread.Sleep(500); 
+                System.Threading.Thread.Sleep(500);
                 bOptions_needs_refresh = true;
                 update_gui();
             }
@@ -1889,7 +1899,7 @@ namespace MultiWiiWinGUI
             timer_realtime.Start();
             System.Threading.Thread.Sleep(500);
             bOptions_needs_refresh = true;
-            update_gui();           
+            update_gui();
 
 
         }
@@ -1974,7 +1984,7 @@ namespace MultiWiiWinGUI
             nTMID.Value = (decimal)mw_gui.ThrottleMID / 100;
             nTMID.BackColor = Color.White;
             trackBar_T_MID.Value = mw_gui.ThrottleMID;
-            throttle_expo_control1.SetRCExpoParameters((double)mw_gui.ThrottleMID/100, (double)mw_gui.ThrottleEXPO / 100,mw_gui.rcThrottle);
+            throttle_expo_control1.SetRCExpoParameters((double)mw_gui.ThrottleMID / 100, (double)mw_gui.ThrottleEXPO / 100, mw_gui.rcThrottle);
 
             nPAlarm.Value = mw_gui.powerTrigger;
             nPAlarm.BackColor = Color.White;
@@ -2009,7 +2019,7 @@ namespace MultiWiiWinGUI
                 if (Pid[i].Dshown) { Pid[i].Dfield.Value = (decimal)mw_params.pidD[i] / Pid[i].Dprec; }
 
             }
-            
+
             nRATE_rp.Value = (decimal)mw_params.RollPitchRate / 100;
             nRATE_yaw.Value = (decimal)mw_params.YawRate / 100;
             nRATE_tpid.Value = (decimal)mw_params.DynThrPID / 100;
@@ -2024,7 +2034,7 @@ namespace MultiWiiWinGUI
             trackBar_T_EXPO.Value = mw_params.ThrottleEXPO;
             nTMID.Value = (decimal)mw_params.ThrottleMID / 100;
             trackBar_T_MID.Value = mw_params.ThrottleMID;
-            throttle_expo_control1.SetRCExpoParameters((double)mw_params.ThrottleMID / 100, (double)mw_params.ThrottleEXPO / 100,mw_gui.rcThrottle);
+            throttle_expo_control1.SetRCExpoParameters((double)mw_params.ThrottleMID / 100, (double)mw_params.ThrottleEXPO / 100, mw_gui.rcThrottle);
 
             nPAlarm.Value = mw_params.PowerTrigger;
 
@@ -2121,7 +2131,7 @@ namespace MultiWiiWinGUI
 
             if (bVideoRecording == true)
             {
-                tsFrameTimeStamp = tsFrameTimeStamp.Add(tsFrameRate); 
+                tsFrameTimeStamp = tsFrameTimeStamp.Add(tsFrameRate);
                 if (vfwWriter != null)
                 {
                     vfwWriter.WriteVideoFrame(image, tsFrameTimeStamp);
@@ -2276,12 +2286,12 @@ namespace MultiWiiWinGUI
                 this.Cursor = Cursors.Default;
                 if (String.Compare(sVersionFromSVN, sVersion) == 0)
                 {
-                    MessageBoxEx.Show(this, "You have the latest version : " + sVersionFromSVN, "No update available",MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    MessageBoxEx.Show(this, "You have the latest version : " + sVersionFromSVN, "No update available", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
 
-                    MessageBoxEx.Show(this, "A new version : " + sVersionFromSVN + " is available\r\n"+sCommentFromSVN+"\r\nYou can download it from http://code.google.com/p/mw-wingui/downloads/list","Update available",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+                    MessageBoxEx.Show(this, "A new version : " + sVersionFromSVN + " is available\r\n" + sCommentFromSVN + "\r\nYou can download it from http://code.google.com/p/mw-wingui/downloads/list", "Update available", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
             catch
@@ -2315,7 +2325,7 @@ namespace MultiWiiWinGUI
             o[4] = (byte)command; c ^= o[4];
             o[5] = (byte)c;
             serialPort.Write(o, 0, 6);
-            
+
 
         }
 
@@ -2350,7 +2360,7 @@ namespace MultiWiiWinGUI
         private void trackBar_T_MID_Scroll(object sender, EventArgs e)
         {
             nTMID.Value = (decimal)trackBar_T_MID.Value / 100;
-            throttle_expo_control1.SetRCExpoParameters((double)nTMID.Value, (double)nTEXPO.Value,mw_gui.rcThrottle);
+            throttle_expo_control1.SetRCExpoParameters((double)nTMID.Value, (double)nTEXPO.Value, mw_gui.rcThrottle);
         }
 
         private void trackBar_T_EXPO_Scroll(object sender, EventArgs e)
@@ -2387,7 +2397,7 @@ namespace MultiWiiWinGUI
                 nTEXPO.BackColor = Color.White;
             }
 
-        }     
+        }
 
 
 
@@ -2492,7 +2502,7 @@ namespace MultiWiiWinGUI
             wKMLLogStream.WriteLine("</Placemark>");
 
             wKMLLogStream.WriteLine("<Placemark>");
-            wKMLLogStream.WriteLine("<name>"+description+"</name>");
+            wKMLLogStream.WriteLine("<name>" + description + "</name>");
             wKMLLogStream.WriteLine("<Point>");
             wKMLLogStream.WriteLine("<altitudeMode>absolute</altitudeMode>");
             wKMLLogStream.WriteLine("<coordinates>");
@@ -2517,59 +2527,59 @@ namespace MultiWiiWinGUI
 
 
 
-/*
-        void MainMap_MouseDown(object sender, MouseEventArgs e)
-        {
-//            start = MainMap.FromLocalToLatLng(e.X, e.Y);
-
-            if (e.Button == MouseButtons.Left)
-            {
-
-//                copterPosMarker.Position = start;
- //               points.Add(new PointLatLng(copterPos.Lat, copterPos.Lng));
- //               Grout.Points.Add(start);
-//                    = new GMapRoute(points, "track");
- //               //routes.Routes.Add(Grout);
- //               MainMap.Position = start;
-//                MainMap.Invalidate();
-
-
-
-            }
-        }
-
-        void MainMap_MouseMove(object sender, MouseEventArgs e)
-        {
-            PointLatLng point = MainMap.FromLocalToLatLng(e.X, e.Y);
-            currentMarker.Position = point;
-
-
-
-        }
-*/
-
-        private void addpolygonmarker(string tag, double lng, double lat, int alt, Color? color)
-        {
-                PointLatLng point = new PointLatLng(lat, lng);
-                GMapMarkerGoogleGreen m = new GMapMarkerGoogleGreen(point);
-                m.ToolTipMode = MarkerTooltipMode.Always;
-                m.ToolTipText = tag;
-                m.Tag = tag;
-
-                //ArdupilotMega.GMapMarkerRectWPRad mBorders = new ArdupilotMega.GMapMarkerRectWPRad(point, (int)float.Parse(TXT_WPRad.Text), MainMap);
-                GMapMarkerRect mBorders = new GMapMarkerRect(point);
+        /*
+                void MainMap_MouseDown(object sender, MouseEventArgs e)
                 {
-                    mBorders.InnerMarker = m;
-                    mBorders.wprad = (int)float.Parse("5");
-                    mBorders.MainMap = MainMap;
-                    if (color.HasValue)
+        //            start = MainMap.FromLocalToLatLng(e.X, e.Y);
+
+                    if (e.Button == MouseButtons.Left)
                     {
-                        mBorders.Color = color.Value;
+
+        //                copterPosMarker.Position = start;
+         //               points.Add(new PointLatLng(copterPos.Lat, copterPos.Lng));
+         //               Grout.Points.Add(start);
+        //                    = new GMapRoute(points, "track");
+         //               //routes.Routes.Add(Grout);
+         //               MainMap.Position = start;
+        //                MainMap.Invalidate();
+
+
+
                     }
                 }
 
-                markers.Markers.Add(m);
-                markers.Markers.Add(mBorders);
+                void MainMap_MouseMove(object sender, MouseEventArgs e)
+                {
+                    PointLatLng point = MainMap.FromLocalToLatLng(e.X, e.Y);
+                    currentMarker.Position = point;
+
+
+
+                }
+        */
+
+        private void addpolygonmarker(string tag, double lng, double lat, int alt, Color? color)
+        {
+            PointLatLng point = new PointLatLng(lat, lng);
+            GMapMarkerGoogleGreen m = new GMapMarkerGoogleGreen(point);
+            m.ToolTipMode = MarkerTooltipMode.Always;
+            m.ToolTipText = tag;
+            m.Tag = tag;
+
+            //ArdupilotMega.GMapMarkerRectWPRad mBorders = new ArdupilotMega.GMapMarkerRectWPRad(point, (int)float.Parse(TXT_WPRad.Text), MainMap);
+            GMapMarkerRect mBorders = new GMapMarkerRect(point);
+            {
+                mBorders.InnerMarker = m;
+                mBorders.wprad = (int)float.Parse("5");
+                mBorders.MainMap = MainMap;
+                if (color.HasValue)
+                {
+                    mBorders.Color = color.Value;
+                }
+            }
+
+            markers.Markers.Add(m);
+            markers.Markers.Add(mBorders);
         }
 
         void RegeneratePolygon()
@@ -2607,7 +2617,7 @@ namespace MultiWiiWinGUI
                 }
                 else
                 {
-                        MainMap.UpdatePolygonLocalPosition(polygon);
+                    MainMap.UpdatePolygonLocalPosition(polygon);
                 }
             }
         }
@@ -2730,7 +2740,7 @@ namespace MultiWiiWinGUI
 
                 if (currentMarker.IsVisible)
                 {
-                   currentMarker.Position = MainMap.FromLocalToLatLng(e.X, e.Y);
+                    currentMarker.Position = MainMap.FromLocalToLatLng(e.X, e.Y);
                 }
             }
         }
@@ -2777,7 +2787,7 @@ namespace MultiWiiWinGUI
                         if (pIndex < polygon.Points.Count)
                         {
                             polygon.Points[pIndex.Value] = pnew;
-                                MainMap.UpdatePolygonLocalPosition(polygon);
+                            MainMap.UpdatePolygonLocalPosition(polygon);
                         }
                     }
 
@@ -2863,7 +2873,7 @@ namespace MultiWiiWinGUI
                     }
                 }
             }
-        
+
         }
 
         private void ifield_valuechange(object sender, EventArgs e)
@@ -2905,7 +2915,7 @@ namespace MultiWiiWinGUI
 
         private void nRATE_rp_ValueChanged(object sender, EventArgs e)
         {
-            if (nRATE_rp.Value != (decimal)mw_gui.RollPitchRate / 100)  { nRATE_rp.BackColor = Color.IndianRed; }
+            if (nRATE_rp.Value != (decimal)mw_gui.RollPitchRate / 100) { nRATE_rp.BackColor = Color.IndianRed; }
             else { nRATE_rp.BackColor = Color.White; }
         }
 
@@ -2923,7 +2933,7 @@ namespace MultiWiiWinGUI
 
         private void nPAlarm_ValueChanged(object sender, EventArgs e)
         {
-            if (nPAlarm.Value != (decimal)mw_gui.powerTrigger ) { nPAlarm.BackColor = Color.IndianRed; }
+            if (nPAlarm.Value != (decimal)mw_gui.powerTrigger) { nPAlarm.BackColor = Color.IndianRed; }
             else { nPAlarm.BackColor = Color.White; }
         }
 
@@ -3101,7 +3111,7 @@ namespace MultiWiiWinGUI
             timer_realtime.Start();
             System.Threading.Thread.Sleep(500);
             bOptions_needs_refresh = true;
-            update_gui();   
+            update_gui();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
