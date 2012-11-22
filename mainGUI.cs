@@ -14,6 +14,7 @@
 */
 
 using System;
+using System.Text;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -316,6 +317,105 @@ namespace MultiWiiWinGUI
 
         }
 
+        private void create_RC_Checkboxes(string[] names)
+        {
+            //Build the RC control checkboxes structure
+
+
+            aux = new CheckBoxEx[4, 4, iCheckBoxItems];
+
+            int startx = 200;
+            int starty = 60;
+
+            int a, b, c;
+            for (c = 0; c < 4; c++)
+            {
+                for (a = 0; a < 3; a++)
+                {
+                    for (b = 0; b < iCheckBoxItems; b++)
+                    {
+                        aux[c, a, b] = new CheckBoxEx();
+                        aux[c, a, b].Location = new Point(startx + a * 18 + c * 70, starty + b * 25);
+                        aux[c, a, b].Visible = true;
+                        aux[c, a, b].Text = "";
+                        aux[c, a, b].AutoSize = true;
+                        aux[c, a, b].Size = new Size(16, 16);
+                        aux[c, a, b].UseVisualStyleBackColor = true;
+                        aux[c, a, b].CheckedChanged += new System.EventHandler(this.aux_checked_changed_event);
+                        //Set info on the given checkbox position
+                        aux[c, a, b].aux = c;           //Which aux channel
+                        aux[c, a, b].rclevel = a;       //which rc level
+                        aux[c, a, b].item = b;          //Which item
+                        this.tabPageRC.Controls.Add(aux[c, a, b]);
+
+                    }
+                }
+            }
+
+            aux_labels = new System.Windows.Forms.Label[4];
+            lmh_labels = new System.Windows.Forms.Label[4, 3];          // aux1-4, L,M,H
+            string strlmh = "LMH";
+            for (a = 0; a < 4; a++)
+            {
+                aux_labels[a] = new System.Windows.Forms.Label();
+                aux_labels[a].Text = "AUX" + String.Format("{0:0}", a + 1);
+                aux_labels[a].Location = new Point(startx + a * 70 + 8, starty - 35);
+                aux_labels[a].AutoSize = true;
+                aux_labels[a].ForeColor = Color.White;
+                this.tabPageRC.Controls.Add(aux_labels[a]);
+                for (b = 0; b < 3; b++)
+                {
+                    lmh_labels[a, b] = new System.Windows.Forms.Label();
+                    lmh_labels[a, b].Text = strlmh.Substring(b, 1); ;
+                    lmh_labels[a, b].Location = new Point(startx + a * 70 + b * 18, starty - 20);
+                    lmh_labels[a, b].AutoSize = true;
+                    lmh_labels[a, b].ForeColor = Color.White;
+                    this.tabPageRC.Controls.Add(lmh_labels[a, b]);
+                }
+
+            }
+
+            cb_labels = new System.Windows.Forms.Label[20];
+
+            for (z = 0; z < iCheckBoxItems; z++)
+            {
+                cb_labels[z] = new System.Windows.Forms.Label();
+                cb_labels[z].Text = names[z];
+                cb_labels[z].Location = new Point(10, starty + z * 25);
+                cb_labels[z].Visible = true;
+                cb_labels[z].AutoSize = true;
+                cb_labels[z].ForeColor = Color.White;
+                cb_labels[z].TextAlign = ContentAlignment.MiddleRight;
+                this.tabPageRC.Controls.Add(cb_labels[z]);
+
+
+            }
+        }
+
+        private void delete_RC_Checkboxes()
+        {
+            int a, b, c;
+            if (aux != null)
+            {
+                for (c = 0; c < 4; c++)
+                {
+                    for (a = 0; a < 3; a++)
+                    {
+                        for (b = 0; b < iCheckBoxItems; b++)
+                        {
+                            this.tabPageRC.Controls.Remove(aux[c, a, b]);
+                            aux[c, a, b].CheckedChanged -= new System.EventHandler(this.aux_checked_changed_event);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < iCheckBoxItems; i++)
+                {
+                    this.tabPageRC.Controls.Remove(cb_labels[i]);
+                }
+            }
+        }
+
         private void mainGUI_Load(object sender, EventArgs e)
         {
             //First step, check it gui_settings file is exists or not, if not then start settings wizard
@@ -400,10 +500,10 @@ namespace MultiWiiWinGUI
             cb_Log10.Checked = gui_settings.logGdbg;
 
             //Build indicator lamps array
-            indicators = new indicator_lamp[iCheckBoxItems];
+            indicators = new indicator_lamp[20];
             int row = 0; int col = 0;
             int startx = 800; int starty = 3;
-            for (int i = 0; i < iCheckBoxItems; i++)
+            for (int i = 0; i < 20; i++)
             {
                 indicators[i] = new indicator_lamp();
                 indicators[i].Location = new Point(startx + col * 52, starty + row * 19);
@@ -416,77 +516,6 @@ namespace MultiWiiWinGUI
                 if (col == 3) { col = 0; row++; }
             }
 
-
-            //Build the RC control checkboxes structure
-
-
-            aux = new CheckBoxEx[4, 4, iCheckBoxItems];
-
-            startx = 200;
-            starty = 60;
-
-            int a, b, c;
-            for (c = 0; c < 4; c++)
-            {
-                for (a = 0; a < 3; a++)
-                {
-                    for (b = 0; b < iCheckBoxItems; b++)
-                    {
-                        aux[c, a, b] = new CheckBoxEx();
-                        aux[c, a, b].Location = new Point(startx + a * 18 + c * 70, starty + b * 25);
-                        aux[c, a, b].Visible = true;
-                        aux[c, a, b].Text = "";
-                        aux[c, a, b].AutoSize = true;
-                        aux[c, a, b].Size = new Size(16, 16);
-                        aux[c, a, b].UseVisualStyleBackColor = true;
-                        aux[c, a, b].CheckedChanged += new System.EventHandler(this.aux_checked_changed_event);
-                        //Set info on the given checkbox position
-                        aux[c, a, b].aux = c;           //Which aux channel
-                        aux[c, a, b].rclevel = a;       //which rc level
-                        aux[c, a, b].item = b;          //Which item
-                        this.tabPageRC.Controls.Add(aux[c, a, b]);
-
-                    }
-                }
-            }
-
-            aux_labels = new System.Windows.Forms.Label[4];
-            lmh_labels = new System.Windows.Forms.Label[4, 3];          // aux1-4, L,M,H
-            string strlmh = "LMH";
-            for (a = 0; a < 4; a++)
-            {
-                aux_labels[a] = new System.Windows.Forms.Label();
-                aux_labels[a].Text = "AUX" + String.Format("{0:0}", a + 1);
-                aux_labels[a].Location = new Point(startx + a * 70 + 8, starty - 35);
-                aux_labels[a].AutoSize = true;
-                aux_labels[a].ForeColor = Color.White;
-                this.tabPageRC.Controls.Add(aux_labels[a]);
-                for (b = 0; b < 3; b++)
-                {
-                    lmh_labels[a, b] = new System.Windows.Forms.Label();
-                    lmh_labels[a, b].Text = strlmh.Substring(b, 1); ;
-                    lmh_labels[a, b].Location = new Point(startx + a * 70 + b * 18, starty - 20);
-                    lmh_labels[a, b].AutoSize = true;
-                    lmh_labels[a, b].ForeColor = Color.White;
-                    this.tabPageRC.Controls.Add(lmh_labels[a, b]);
-                }
-
-            }
-
-            cb_labels = new System.Windows.Forms.Label[20];
-
-            for (z = 0; z < iCheckBoxItems; z++)
-            {
-                cb_labels[z] = new System.Windows.Forms.Label();
-                cb_labels[z].Text = option_names[z];
-                cb_labels[z].Location = new Point(10, starty + z * 25);
-                cb_labels[z].Visible = true;
-                cb_labels[z].AutoSize = true;
-                cb_labels[z].ForeColor = Color.White;
-                cb_labels[z].TextAlign = ContentAlignment.MiddleRight;
-                toolTip1.SetToolTip(cb_labels[z], option_desc[z]);
-                this.tabPageRC.Controls.Add(cb_labels[z]);
-            }
 
             //Build PID control structure based on the Pid structure.
 
@@ -836,6 +865,7 @@ namespace MultiWiiWinGUI
 
             if (serialPort.IsOpen)              //Disconnect
             {
+                delete_RC_Checkboxes();
                 b_connect.Text = "Connect";
                 b_connect.Image = Properties.Resources.connect;
                 isConnected = false;
@@ -908,6 +938,7 @@ namespace MultiWiiWinGUI
                     MSPquery(MSP_RC_TUNING);
                     MSPquery(MSP_IDENT);
                     MSPquery(MSP_BOX);
+                    MSPquery(MSP_BOXNAMES);
                     MSPquery(MSP_MISC);
                 }
 
@@ -916,14 +947,41 @@ namespace MultiWiiWinGUI
                 //Run BackgroundWorker
                 if (!bkgWorker.IsBusy) { bkgWorker.RunWorkerAsync(); }
 
-                timer_realtime.Start();
+
 
                 //if (tabMain.SelectedIndex == 2 && !isPaused) timer_realtime.Start();                             //If we are standing at the monitor page, start timer
                 //if (tabMain.SelectedIndex == 1 && !isPausedRC) timer_rc.Start();                                //And start it if we stays on rc settings page
                 //if (tabMain.SelectedIndex == 3 && !isPausedGPS) timer_GPS.Start();
                 System.Threading.Thread.Sleep(1000);
 
+
+                int x = 0;
+                while (mw_gui.bUpdateBoxNames == false)
+                {
+                    x++;
+                    System.Threading.Thread.Sleep(1);
+
+                    if (x > 1000)
+                    {
+                        MessageBoxEx.Show(this, "Please check if you have selected the right com port", "Error device not responding", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        b_connect.Text = "Connect";
+                        b_connect.Image = Properties.Resources.connect;
+                        isConnected = false;
+                        timer_realtime.Stop();                       //Stop timer(s), whatever it takes
+                        //timer_rc.Stop();
+                        bkgWorker.CancelAsync();
+                        System.Threading.Thread.Sleep(500);         //Wait bkworker to finish
+                        serialPort.Close();
+                        if (bLogRunning)
+                        {
+                            closeLog();
+                        }
+                        return;
+                    }
+                }
+                timer_realtime.Start();
                 bOptions_needs_refresh = true;
+                create_RC_Checkboxes(mw_gui.sBoxNames);
                 update_gui();
 
 
@@ -1301,10 +1359,22 @@ namespace MultiWiiWinGUI
                     break;
                 case MSP_BOX:
                     ptr = 0;
-                    for (int i = 0; i < iCheckBoxItems; i++)
+                    if (mw_gui.activation.Length < dataSize / 2)
+                        mw_gui.activation = new short[dataSize / 2];
+                    for (int i = 0; i < (dataSize / 2); i++)
                     {
                         mw_gui.activation[i] = BitConverter.ToInt16(inBuf, ptr); ptr += 2;
                     }
+                    break;
+                case MSP_BOXNAMES:
+                    StringBuilder builder = new StringBuilder();
+                    ptr = 0;
+                    while (ptr < dataSize) builder.Append((char)inBuf[ptr++]);
+                    builder.Remove(builder.Length - 1, 1);
+                    mw_gui.sBoxNames = new string[builder.ToString().Split(';').Length];
+                    mw_gui.sBoxNames = builder.ToString().Split(';');
+                    iCheckBoxItems = mw_gui.sBoxNames.Length;
+                    mw_gui.bUpdateBoxNames = true;
                     break;
                 case MSP_MISC:
                     ptr = 0;
@@ -1413,7 +1483,7 @@ namespace MultiWiiWinGUI
                                 checksum = 0;
                                 checksum ^= c;
                                 c_state = HEADER_SIZE;
-                                if (dataSize > 100) { c_state = IDLE; }
+                                if (dataSize > 150) { c_state = IDLE; }
 
                                 break;
                             case HEADER_SIZE:
@@ -1485,7 +1555,6 @@ namespace MultiWiiWinGUI
 
             label41.Text = Convert.ToString(serial_error_count);
             label42.Text = Convert.ToString(serial_packet_count);
-
 
             if (bSerialError)
             {
@@ -1622,7 +1691,7 @@ namespace MultiWiiWinGUI
             if (tabMain.SelectedIndex == 1)
             {
                 //update RC control values
-                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[7], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7]);
+                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7]);
                 //Show LMH postions above switches
                 lmh_labels[0, 0].BackColor = (mw_gui.rcAUX[0] < rcLow) ? Color.Green : Color.Transparent;
                 lmh_labels[0, 1].BackColor = (mw_gui.rcAUX[0] > rcLow && mw_gui.rcAUX[0] < rcMid) ? Color.Green : Color.Transparent;
