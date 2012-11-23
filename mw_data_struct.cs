@@ -626,6 +626,8 @@ namespace MultiWiiWinGUI
         public byte ThrottleMID;
         public byte ThrottleEXPO;
         public Int16[] activation;
+        public string[] sBoxNames;
+        public bool bUpdateBoxNames;
         public int GPS_distanceToHome;
         public int GPS_directionToHome;
         public byte GPS_numSat;
@@ -666,6 +668,7 @@ namespace MultiWiiWinGUI
             iPIDItems = pidItems;
             iCheckBoxItems = checkboxItems;
             iSwVer = iSoftwareVersion;
+            bUpdateBoxNames = false;
 
 
         }
