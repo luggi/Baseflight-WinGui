@@ -319,13 +319,31 @@ namespace MultiWiiWinGUI
 
         private void create_RC_Checkboxes(string[] names)
         {
+
+            //Build indicator lamps array
+            indicators = new indicator_lamp[iCheckBoxItems];
+            int row = 0; int col = 0;
+            int startx = 800; int starty = 3;
+            for (int i = 0; i < iCheckBoxItems; i++)
+            {
+                indicators[i] = new indicator_lamp();
+                indicators[i].Location = new Point(startx + col * 52, starty + row * 19);
+                indicators[i].Visible = true;
+                indicators[i].Text = names[i];
+                indicators[i].indicator_color = 1;
+                indicators[i].Anchor = AnchorStyles.Right;
+                this.splitContainer2.Panel2.Controls.Add(indicators[i]);
+                col++;
+                if (col == 3) { col = 0; row++; }
+            }
+
             //Build the RC control checkboxes structure
 
 
             aux = new CheckBoxEx[4, 4, iCheckBoxItems];
 
-            int startx = 200;
-            int starty = 60;
+            startx = 200;
+            starty = 60;
 
             int a, b, c;
             for (c = 0; c < 4; c++)
@@ -412,6 +430,7 @@ namespace MultiWiiWinGUI
                 for (int i = 0; i < iCheckBoxItems; i++)
                 {
                     this.tabPageRC.Controls.Remove(cb_labels[i]);
+                    this.splitContainer2.Panel2.Controls.Remove(indicators[i]);
                 }
             }
         }
@@ -499,22 +518,7 @@ namespace MultiWiiWinGUI
             cb_Log9.Checked = gui_settings.logGpar;
             cb_Log10.Checked = gui_settings.logGdbg;
 
-            //Build indicator lamps array
-            indicators = new indicator_lamp[20];
-            int row = 0; int col = 0;
-            int startx = 800; int starty = 3;
-            for (int i = 0; i < 20; i++)
-            {
-                indicators[i] = new indicator_lamp();
-                indicators[i].Location = new Point(startx + col * 52, starty + row * 19);
-                indicators[i].Visible = true;
-                indicators[i].Text = option_indicators[i];
-                indicators[i].indicator_color = 1;
-                indicators[i].Anchor = AnchorStyles.Right;
-                this.splitContainer2.Panel2.Controls.Add(indicators[i]);
-                col++;
-                if (col == 3) { col = 0; row++; }
-            }
+
 
 
             //Build PID control structure based on the Pid structure.
@@ -1691,7 +1695,7 @@ namespace MultiWiiWinGUI
             if (tabMain.SelectedIndex == 1)
             {
                 //update RC control values
-                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7]);
+                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7],AUX_CHANNELS+4);
                 //Show LMH postions above switches
                 lmh_labels[0, 0].BackColor = (mw_gui.rcAUX[0] < rcLow) ? Color.Green : Color.Transparent;
                 lmh_labels[0, 1].BackColor = (mw_gui.rcAUX[0] > rcLow && mw_gui.rcAUX[0] < rcMid) ? Color.Green : Color.Transparent;
@@ -1763,7 +1767,7 @@ namespace MultiWiiWinGUI
                 if (cb_mag_yaw.Checked) { list_mag_yaw.Add((double)xTimeStamp, mw_gui.magz); }
                 l_mag_yaw.Text = "" + mw_gui.magz;
 
-                if (cb_alt.Checked) { list_alt.Add((double)xTimeStamp, mw_gui.baro / 100); }
+                if (cb_alt.Checked) { list_alt.Add((double)xTimeStamp, (double)mw_gui.baro / 100.0f); }
                 l_alt.Text = "" + (double)mw_gui.baro / 100;
 
                 if (cb_head.Checked) { list_head.Add((double)xTimeStamp, mw_gui.heading); }
@@ -1793,7 +1797,7 @@ namespace MultiWiiWinGUI
                 zgMonitor.AxisChange();
                 zgMonitor.Invalidate();
 
-                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7]);
+                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7],AUX_CHANNELS+4);
 
                 curve_acc_roll.IsVisible = cb_acc_roll.Checked;
                 curve_acc_pitch.IsVisible = cb_acc_pitch.Checked;
