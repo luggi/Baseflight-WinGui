@@ -818,8 +818,7 @@ namespace MultiWiiWinGUI
 
 
         }
-
-
+        
         private void timer_realtime_Tick(object sender, EventArgs e)
         {
 
@@ -1054,11 +1053,7 @@ namespace MultiWiiWinGUI
             logbrowser.ShowDialog();
             logbrowser.Dispose();
         }
-
-
-
-
-
+        
         private void l_ports_label_DoubleClick(object sender, EventArgs e)
         {
             serial_ports_enumerate();
@@ -1215,8 +1210,7 @@ namespace MultiWiiWinGUI
                     reader.Close();
             }
         }
-
-
+        
         private void b_pause_Click(object sender, EventArgs e)
         {
             isPaused = !isPaused;
@@ -1234,7 +1228,6 @@ namespace MultiWiiWinGUI
             }
 
         }
-
 
         private byte read8(SerialPort s)
         {
@@ -1254,7 +1247,6 @@ namespace MultiWiiWinGUI
 
             return (retval);
         }
-
 
         private void evaluate_command(byte cmd)
         {
@@ -1429,13 +1421,6 @@ namespace MultiWiiWinGUI
 
             }
         }
-
-
-
-
-
-
-
 
         private void bkgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -2406,9 +2391,7 @@ namespace MultiWiiWinGUI
             attitudeIndicatorInstrumentControl1.ToggleArtificalHorizonType();
 
         }
-
-
-
+                
         private void MSPquery(int command)
         {
             byte c = 0;
@@ -2441,9 +2424,7 @@ namespace MultiWiiWinGUI
             o[6] = (byte)c;
             serialPort.Write(o, 0, 7);
         }
-
-
-
+        
         private int decimals(int prec)
         {
             if (prec == 1) return (0);
@@ -2495,10 +2476,7 @@ namespace MultiWiiWinGUI
             }
 
         }
-
-
-
-
+        
         private void b_log_Click(object sender, EventArgs e)
         {
             if (bLogRunning)        //Close
@@ -2521,8 +2499,7 @@ namespace MultiWiiWinGUI
                 }
             }
         }
-
-
+        
         void openLog()
         {
             try
@@ -2576,6 +2553,7 @@ namespace MultiWiiWinGUI
                 bKMLLogRunning = true;
             }
         }
+     
         void closeKMLLog()
         {
 
@@ -2589,8 +2567,7 @@ namespace MultiWiiWinGUI
             wKMLLogStream.Dispose();
             bKMLLogRunning = false;
         }
-
-
+        
         void addKMLMarker(string description, double lon, double lat, double alt)
         {
             //Close open LineStringPlacemark
@@ -2619,11 +2596,7 @@ namespace MultiWiiWinGUI
 
 
         }
-
-
-
-
-
+        
         /*
                 void MainMap_MouseDown(object sender, MouseEventArgs e)
                 {
@@ -2718,8 +2691,7 @@ namespace MultiWiiWinGUI
                 }
             }
         }
-
-
+        
         // MapZoomChanged
         void MainMap_OnMapZoomChanged()
         {
@@ -2729,8 +2701,7 @@ namespace MultiWiiWinGUI
                 center.Position = MainMap.Position;
             }
         }
-
-
+        
         // current point changed
         void MainMap_OnCurrentPositionChanged(PointLatLng point)
         {
@@ -2771,8 +2742,7 @@ namespace MultiWiiWinGUI
                 }
             }
         }
-
-
+        
         void MainMap_MouseUp(object sender, MouseEventArgs e)
         {
             end = MainMap.FromLocalToLatLng(e.X, e.Y);
@@ -2902,12 +2872,7 @@ namespace MultiWiiWinGUI
             }
 
         }
-
-
-
-
-
-
+        
         private void cbMapProviders_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -2922,9 +2887,7 @@ namespace MultiWiiWinGUI
             this.Cursor = Cursors.Default;
 
         }
-
-
-
+        
         private void b_start_KML_log_Click(object sender, EventArgs e)
         {
             if (bKMLLogRunning)
@@ -2950,8 +2913,7 @@ namespace MultiWiiWinGUI
         {
             Grout.Points.Clear();
         }
-
-
+        
         #region ValueChangedEvents
 
         private void pfield_valuechange(object sender, EventArgs e)
