@@ -1000,9 +1000,26 @@ namespace MultiWiiWinGUI
             timer_realtime.Interval = iRefreshIntervals[cb_monitor_rate.SelectedIndex];
         }
 
+        Boolean isCLI = false;
         private void tabMain_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (isConnected == true)
+            {
+                if (tabMain.SelectedTab == tabPageCLI)
+                {
+                    timer_realtime.Stop();
+                    isCLI = true;
+                    serialPort.Write("#");
+                }
+                else
+                {
+                    serialPort.Write("exit\r\n");
+                    serialPort.ReadExisting();
+                    isCLI = false;
+                    if (isConnected == true)
+                        timer_realtime.Start();
+                }
+            }
             switch (tabMain.SelectedIndex)
             {
                 case 2:
@@ -1450,96 +1467,103 @@ namespace MultiWiiWinGUI
                     //Just process what is received. Get received commands and put them into 
                     while (serialPort.BytesToRead > 0)
                     {
-                        c = (byte)serialPort.ReadByte();
-
-
-                        switch (c_state)
+                        if (isCLI == true)
                         {
-                            case IDLE:
-                                c_state = (c == '$') ? HEADER_START : IDLE;
-                                break;
-                            case HEADER_START:
-                                c_state = (c == 'M') ? HEADER_M : IDLE;
-                                break;
+                            inCLIBuffer = serialPort.ReadExisting();
+                            AccessToTB();
+                        }
+                        else
+                        {
+                            c = (byte)serialPort.ReadByte();
 
-                            case HEADER_M:
-                                if (c == '>')
-                                {
-                                    c_state = HEADER_ARROW;
-                                }
-                                else if (c == '!')
-                                {
-                                    c_state = HEADER_ERR;
-                                }
-                                else
-                                {
-                                    c_state = IDLE;
-                                }
-                                break;
 
-                            case HEADER_ARROW:
-                            case HEADER_ERR:
-                                /* is this an error message? */
-                                err_rcvd = (c_state == HEADER_ERR);        /* now we are expecting the payload size */
-                                dataSize = c;
-                                /* reset index variables */
-                                offset = 0;
-                                checksum = 0;
-                                checksum ^= c;
-                                c_state = HEADER_SIZE;
-                                if (dataSize > 150) { c_state = IDLE; }
+                            switch (c_state)
+                            {
+                                case IDLE:
+                                    c_state = (c == '$') ? HEADER_START : IDLE;
+                                    break;
+                                case HEADER_START:
+                                    c_state = (c == 'M') ? HEADER_M : IDLE;
+                                    break;
 
-                                break;
-                            case HEADER_SIZE:
-                                cmd = c;
-                                checksum ^= c;
-                                c_state = HEADER_CMD;
-                                break;
-                            case HEADER_CMD:
-                                if (offset < dataSize)
-                                {
-                                    checksum ^= c;
-                                    inBuf[offset++] = c;
-                                }
-                                else
-                                {
-
-                                    /* compare calculated and transferred checksum */
-                                    if (checksum == c)
+                                case HEADER_M:
+                                    if (c == '>')
                                     {
-                                        if (err_rcvd)
-                                        {
-                                            // Console.WriteLine("Copter did not understand request type " + err_rcvd);
-                                        }
-                                        else
-                                        {
-                                            /* we got a valid response packet, evaluate it */
-                                            serial_packet_count++;
-                                            evaluate_command(cmd);
-                                        }
+                                        c_state = HEADER_ARROW;
+                                    }
+                                    else if (c == '!')
+                                    {
+                                        c_state = HEADER_ERR;
                                     }
                                     else
                                     {
-                                        /*
-                                        Console.WriteLine("invalid checksum for command " + cmd + ": " + checksum + " expected, got " + c);
-                                        Console.Write("<" + cmd + " " + dataSize + "> {");
-                                        for (int i = 0; i < dataSize; i++)
-                                        {
-                                            if (i != 0) { Console.Write(' '); }
-                                            Console.Write(inBuf[i]);
-                                        }
-                                        Console.WriteLine("} [" + c + "]");
-                                         */
-
-                                        serial_error_count++;
-
+                                        c_state = IDLE;
                                     }
-                                    c_state = IDLE;
-                                }
-                                break;
+                                    break;
+
+                                case HEADER_ARROW:
+                                case HEADER_ERR:
+                                    /* is this an error message? */
+                                    err_rcvd = (c_state == HEADER_ERR);        /* now we are expecting the payload size */
+                                    dataSize = c;
+                                    /* reset index variables */
+                                    offset = 0;
+                                    checksum = 0;
+                                    checksum ^= c;
+                                    c_state = HEADER_SIZE;
+                                    if (dataSize > 150) { c_state = IDLE; }
+
+                                    break;
+                                case HEADER_SIZE:
+                                    cmd = c;
+                                    checksum ^= c;
+                                    c_state = HEADER_CMD;
+                                    break;
+                                case HEADER_CMD:
+                                    if (offset < dataSize)
+                                    {
+                                        checksum ^= c;
+                                        inBuf[offset++] = c;
+                                    }
+                                    else
+                                    {
+
+                                        /* compare calculated and transferred checksum */
+                                        if (checksum == c)
+                                        {
+                                            if (err_rcvd)
+                                            {
+                                                // Console.WriteLine("Copter did not understand request type " + err_rcvd);
+                                            }
+                                            else
+                                            {
+                                                /* we got a valid response packet, evaluate it */
+                                                serial_packet_count++;
+                                                evaluate_command(cmd);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            /*
+                                            Console.WriteLine("invalid checksum for command " + cmd + ": " + checksum + " expected, got " + c);
+                                            Console.Write("<" + cmd + " " + dataSize + "> {");
+                                            for (int i = 0; i < dataSize; i++)
+                                            {
+                                                if (i != 0) { Console.Write(' '); }
+                                                Console.Write(inBuf[i]);
+                                            }
+                                            Console.WriteLine("} [" + c + "]");
+                                             */
+
+                                            serial_error_count++;
+
+                                        }
+                                        c_state = IDLE;
+                                    }
+                                    break;
+                            }
                         }
                     }
-
                 }
                 else   //port not opened, (it could happen when U disconnect the usb cable while connected
                 {
@@ -1695,7 +1719,7 @@ namespace MultiWiiWinGUI
             if (tabMain.SelectedIndex == 1)
             {
                 //update RC control values
-                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7],AUX_CHANNELS+4);
+                rci_Control_settings.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX,AUX_CHANNELS+4);
                 //Show LMH postions above switches
                 lmh_labels[0, 0].BackColor = (mw_gui.rcAUX[0] < rcLow) ? Color.Green : Color.Transparent;
                 lmh_labels[0, 1].BackColor = (mw_gui.rcAUX[0] > rcLow && mw_gui.rcAUX[0] < rcMid) ? Color.Green : Color.Transparent;
@@ -1797,7 +1821,7 @@ namespace MultiWiiWinGUI
                 zgMonitor.AxisChange();
                 zgMonitor.Invalidate();
 
-                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX[0], mw_gui.rcAUX[1], mw_gui.rcAUX[2], mw_gui.rcAUX[3], mw_gui.rcAUX[4], mw_gui.rcAUX[5], mw_gui.rcAUX[6], mw_gui.rcAUX[7],AUX_CHANNELS+4);
+                rc_input_control1.SetRCInputParameters(mw_gui.rcThrottle, mw_gui.rcPitch, mw_gui.rcRoll, mw_gui.rcYaw, mw_gui.rcAUX,AUX_CHANNELS+4);
 
                 curve_acc_roll.IsVisible = cb_acc_roll.Checked;
                 curve_acc_pitch.IsVisible = cb_acc_pitch.Checked;
@@ -3210,6 +3234,23 @@ namespace MultiWiiWinGUI
 
         }
 
+        string inCLIBuffer;
+
+        void AccessToTB()
+        {
+            if (txtCLIResult.InvokeRequired)
+            {
+                txtCLIResult.Invoke(new MethodInvoker(AccessToTB));
+                return;
+            }
+            txtCLIResult.AppendText(inCLIBuffer);
+        }
+
+        private void cmdCLISend_Click(object sender, EventArgs e)
+        {
+            serialPort.Write(txtCLICommand.Text + "\r\n");
+            txtCLICommand.Text = "";
+        }
     }
 
 }
