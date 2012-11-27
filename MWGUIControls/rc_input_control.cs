@@ -100,23 +100,18 @@ namespace MultiWiiGUIControls
         /// Set the bar values based on the input variables
         ///</summary>
 
-        public void SetRCInputParameters(int rcThr, int rcPitch, int rcRoll, int rcYaw, int rcAux1, int rcAux2, int rcAux3, int rcAux4, int rcAux5, int rcAux6, int rcAux7, int rcAux8,int RCchannels)
+        public void SetRCInputParameters(int rcThr, int rcPitch, int rcRoll, int rcYaw, int[] rcAux, int RCchannels)
         {
-
             RC_Values[0] = rcThr;
             RC_Values[1] = rcPitch;
             RC_Values[2] = rcRoll;
             RC_Values[3] = rcYaw;
-            RC_Values[4] = rcAux1;
-            RC_Values[5] = rcAux2;
-            RC_Values[6] = rcAux3;
-            RC_Values[7] = rcAux4;
-            RC_Values[8] = rcAux5;
-            RC_Values[9] = rcAux6;
-            RC_Values[10] = rcAux7;
-            RC_Values[11] = rcAux8;
+            int i = 4;
+            foreach  (int Aux in rcAux) {
+                RC_Values[i] = Aux;
+                i++;
+            }
             RC_Channels = RCchannels;
-
             this.Refresh();
         }
 
